@@ -19,7 +19,7 @@ function [baseline_model, P] = StationModelProjections(station_number)
 %       values over the full 21st century modeled period
 %   **list any other outputs you choose to include**
 %
-% AUTHOR:   Add your names here!
+% AUTHOR:   Sarah Ashebir and Gaby Reiter
 %
 % REFERENCE:
 %    Written for EESC 4464: Environmental Data Exploration and Analysis, Boston College
@@ -31,8 +31,12 @@ function [baseline_model, P] = StationModelProjections(station_number)
 
 %% Read and extract the data from your station from the csv file
 filename = ['model' num2str(station_number) '.csv'];
-%Extract the year and annual mean temperature data
-%<--
+    %('model' num2str(stationdata) '.csv');
+twentyfirst_stationdata = readtable(filename);
+
+
+
+
 
 %% Calculate the mean and standard deviation of the annual mean temperatures
 %  over the baseline period over the first 20 years of the modeled 21st
@@ -41,15 +45,22 @@ filename = ['model' num2str(station_number) '.csv'];
 %  with both values called baseline_model
  %<-- (this will take multiple lines of code - see the procedure you
  %followed in Part 1 for a reminder of how you can do this)
-
-
+NewYear=twentyfirst_stationdata.Year
+recentyears =find((NewYear>=2006)&(NewYear<= 2025))
+recentmean = mean(twentyfirst_stationdata.AnnualMeanTemperature(recentyears))
+tempStd = nanstd(twentyfirst_stationdata.AnnualMeanTemperature)
 %% Calculate the 5-year moving mean smoothed annual mean temperature anomaly over the modeled period
 % Note that you could choose to provide these as an output if you want to
 % have these values available to plot.
  %<-- anomaly
+baseline_model = twentyfirst_stationdata.AnnualMeanTemperature - recentmean
  %<-- smoothed anomaly
-
+movmeanavg = movmean(TempAnnMeanAnomaly, 5)
 %% Calculate the linear trend in temperature this station over the modeled 21st century period
- %<--
 
-end
+% New_all = polyfit(twentyfirst_stationdata.Year(NewYear),TempAnnMeanAnomaly(NewYear));
+%     %also calculate the slope and intercept of a best fit line just from
+%     %1960 to the end of the observational period
+
+P = polyfit(twentyfirst_stationdata.Year,TempAnnMeanAnomaly,1);
+

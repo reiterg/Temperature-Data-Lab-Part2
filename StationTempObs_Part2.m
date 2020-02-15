@@ -10,16 +10,19 @@ load GlobalStationsLatLon.mat
 
 %Set the beginning year for the more recent temperature trend
 RecentYear = 1960; %you can see how your results change if you vary this value
-
+P_recent= NaN(length(sta),2)
+P_all = NaN(length(sta),2);
 %Initialize arrays to hold slope and intercept values calculated for all stations
-P_all = NaN(length(sta),2); %example of how to do this for the full observational period
+ %example of how to do this for the full observational period
 %<-- do the same thing just for values from RecentYear to today
 
 %Use a for loop to calculate the linear trend over both the full
 %observational period and the time from RecentYear (i.e. 1960) to today
 %using the function StationTempObs_LinearTrend
 %<--
-
+% for i = 1:18
+%     [P_all(i,1:2), P_recent(i,1:2)] = StationTempObs_LinearTrend(sta(i), RecentYear)
+% end 
 %% 3a. Plot a global map of station locations
 %Example code, showing how to plot the locations of all 18 stations
 figure(1); clf
@@ -33,7 +36,12 @@ title('Locations of stations with observational temperature data')
 % Follow the model from 3a, now using the function scatterm rather than plotm
 %to plot symbols for all 18 stations colored by the rate of temperature
 %change from RecentYear to present (i.e. the slope of the linear trendline)
-%<--
+P_recent= NaN(length(sta),2)
+matrix_p_recent= P_recent(:,1)'
+scatterm(lat, lon, 100, matrix_p_recent, 'filled')
+plot(P_recent,sta)
+title('Rate of Temperature Change from 1960 to Present (°C per Decade)')
+colorbar 'EastOutside'
 
 %% Extension option: again using scatterm, plot the difference between the
 %local rate of temperature change (plotted above) and the global mean rate
